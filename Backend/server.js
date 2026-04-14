@@ -1,9 +1,12 @@
 const express = require('express');
 const dotenv = require('dotenv');
+dotenv.config();
 const cors = require('cors');
 const morgan = require('morgan');
+const connectDB = require('./config/Database');
+const { connectRedis } = require('./config/redis');
 
-dotenv.config();
+
 
 const app = express();
 
@@ -11,6 +14,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
+
+//DataBase connection
+connectDB();
+connectRedis();
 
 // Test route
 app.get('/', (req, res) => {
