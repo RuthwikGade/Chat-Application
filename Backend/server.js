@@ -21,6 +21,9 @@ app.use(morgan('dev'));
 connectDB();
 connectRedis();
 
+// Routes
+app.use('/api/auth', authRoutes);
+
 // Test route
 app.get('/', (req, res) => {
   res.json({ message: 'Chat API is running' });
