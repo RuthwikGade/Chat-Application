@@ -9,10 +9,8 @@ const protect = async (req, res, next) => {
       return res.status(401).json({ message: 'Not authorized, no token' });
     }
 
-    // Verify access token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Attach user to request
     req.user = await User.findById(decoded.id).select('-password -refreshToken');
 
     next();
