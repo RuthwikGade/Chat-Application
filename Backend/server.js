@@ -7,7 +7,7 @@ const connectDB = require('./config/Database');
 const { connectRedis } = require('./config/redis');
 const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/authRoutes');
-
+const roomRoutes = require('./routes/roomRoutes');
 
 const app = express();
 
@@ -23,6 +23,7 @@ connectRedis();
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/rooms', roomRoutes);
 
 // Test route
 app.get('/', (req, res) => {
