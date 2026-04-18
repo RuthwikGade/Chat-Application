@@ -13,7 +13,7 @@ A real-time chat application built with Node.js, Express, MongoDB, Redis, and So
 - [x] Module 2 - Server + Database Connections
 - [x] Module 3 - Models
 - [x] Module 4 - Authentication
-- [ ] Module 5 - Chat Routes
+- [x] Module 5 - Chat Routes
 - [ ] Module 6 - Socket.IO
 - [ ] Module 7 - Redis Features
 - [ ] Module 8 - Frontend
