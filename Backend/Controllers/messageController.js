@@ -1,5 +1,6 @@
 const Message = require('../models/Message');
 const Room = require('../models/Room');
+const { getCachedMessages, cacheMessage, clearRoomCache } = require('../config/redis');
 
 
 exports.getMessages = async (req, res) => {
@@ -18,10 +19,22 @@ exports.getMessages = async (req, res) => {
       return res.status(403).json({ message: 'You are not a member of this room' });
     }
 
+    const cachedMessages = await getCachedMessages(req.params.id);
+
+    if (cachedMessages.length > 0) {
+      console.log('Serving messages from Redis cache');
+      return res.status(200).json(cachedMessages);
+    }
+
+    console.log('Cache miss — fetching from MongoDB');
     const messages = await Message.find({ room: req.params.id })
       .populate('sender', 'username email profilePicture')
       .populate('readBy', 'username')
       .sort({ createdAt: 1 });
+
+    for (const message of messages) {
+      await cacheMessage(req.params.id, message);
+    }
 
     res.status(200).json(messages);
 
@@ -44,6 +57,8 @@ exports.deleteMessage = async (req, res) => {
     }
 
     await message.deleteOne();
+
+    await clearRoomCache(message.room.toString());
 
     res.status(200).json({ message: 'Message deleted successfully' });
 
